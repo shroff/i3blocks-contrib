@@ -32,8 +32,7 @@ else:
                 # check if it matches a time
                 time = re.match(r"(\d+):(\d+)", time)
                 if time:
-                    time = ":".join(time.groups())
-                    timeleft = " ({})".format(time)
+                    timeleft = " " + ":".join(time.groups())
                 else:
                     timeleft = ""
 
@@ -54,23 +53,30 @@ else:
     # stands for plugged in
     FA_PLUG = "<span font='FontAwesome'>\uf1e6</span>"
 
-    # stands for using battery
-    FA_BATTERY = "<span font='FontAwesome'>\uf240</span>"
-
     # stands for unknown status of battery
     FA_QUESTION = "<span font='FontAwesome'>\uf128</span>"
 
-
-    if state == "Discharging":
-        fulltext = FA_BATTERY + " "
+    if state == "Charging":
+        fulltext = FA_PLUG + " "
     elif state == "Full":
         fulltext = FA_PLUG + " "
         timeleft = ""
     elif state == "Unknown":
-        fulltext = FA_QUESTION + " " + FA_BATTERY + " "
+        fulltext = FA_QUESTION + " "
         timeleft = ""
     else:
-        fulltext = FA_LIGHTNING + " " + FA_PLUG + " "
+        fulltext = ""
+
+    def icon(percent):
+        if percent < 10:
+            return "<span font='FontAwesome'>\uf244</span>"
+        if percent < 40:
+            return "<span font='FontAwesome'>\uf243</span>"
+        if percent < 60:
+            return "<span font='FontAwesome'>\uf242</span>"
+        if percent < 90:
+            return "<span font='FontAwesome'>\uf241</span>"
+        return "<span font='FontAwesome'>\uf240</span>"
 
     def color(percent):
         if percent < 10:
@@ -92,9 +98,8 @@ else:
             return "#FFFF66"
         return "#FFFFFF"
 
-    form =  '<span color="{}">{}%</span>'
-    fulltext += form.format(color(percentleft), percentleft)
-    fulltext += timeleft
+    form =  '<span color="{}">{}</span>'
+    fulltext += form.format(color(percentleft), icon(percentleft) + timeleft)
 
 print(fulltext)
 print(fulltext)

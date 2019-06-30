@@ -35,10 +35,11 @@ fi
 #------------------------------------------------------------------------
 
 QUALITY=$(grep $INTERFACE /proc/net/wireless | awk '{ print int($3 * 100 / 70) }')
+SSID=$(iw wlp59s0 info | grep -i ssid | sed -e 's/\s*ssid\s*\(.*\)\s*$/\1/')
 
 #------------------------------------------------------------------------
 
-echo $QUALITY% # full text
+echo "$SSID ($QUALITY%)" # full text
 echo $QUALITY% # short text
 
 # color

@@ -18,6 +18,7 @@ AUDIO_DELTA=${AUDIO_DELTA:-5}
 DEFAULT_COLOR=${DEFAULT_COLOR:-"#ffffff"}
 MUTED_COLOR=${MUTED_COLOR:-"#a0a0a0"}
 
+FORMAT_NO_SINK=${LONG_FORMAT:-'${SYMB} ${VOL}%'}
 LONG_FORMAT=${LONG_FORMAT:-'${SYMB} ${VOL}% [${INDEX}:${NAME}]'}
 SHORT_FORMAT=${SHORT_FORMAT:-'${SYMB} ${VOL}% [${INDEX}]'}
 USE_ALSA_NAME=${USE_ALSA_NAME:-0}
@@ -94,6 +95,10 @@ function move_sinks_to_new_default {
     done
 }
 
+function get_playback_device_count {
+    pacmd list-sinks | grep -c index:
+}
+
 function set_default_playback_device_next {
     inc=${1:-1}
     num_devices=$(pacmd list-sinks | grep -c index:)
@@ -156,6 +161,12 @@ sed 's/.*= "\(.*\)".*/\1/')
     else
         SYMB=$AUDIO_MUTED_SYMBOL
         COLOR=$MUTED_COLOR
+    fi
+
+    DEVICE_COUNT=$(get_playback_device_count)
+    if [[ $DEVICE_COUNT == 1 ]] ; then
+        LONG_FORMAT=$FORMAT_NO_SINK
+        SHORT_FORMAT=$FORMAT_NO_SINK
     fi
 
     if [[ $SUBSCRIBE == 1 ]] ; then

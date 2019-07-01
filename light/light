@@ -1,0 +1,19 @@
+#!/usr/bin/bash
+
+STEP="${STEP:-5}"
+
+MIN=$(light -P)
+light -N 1
+
+case $BLOCK_BUTTON in
+  1) light -A $STEP ;;
+  3) light -S 1 ;;
+  4) light -A $STEP ;;
+  5) light -U $STEP ;;
+esac
+
+CUR=$(light -G)
+CUR=${CUR%.*}
+echo "$CUR%"
+echo "$CUR%"
+light -N $MIN

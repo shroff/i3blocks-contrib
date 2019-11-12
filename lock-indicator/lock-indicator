@@ -1,0 +1,24 @@
+#!/bin/bash
+
+NOLOCK_SYMBOL=${NOLOCK_SYMBOL:-' '}
+LOCK_SYMBOL=${LOCK_SYMBOL:-' '}
+
+function toggle_lock {
+    if [ -f "${HOME}/.nolock" ]; then
+        rm -f "${HOME}/.nolock"
+    else
+        touch "${HOME}/.nolock"
+    fi
+}
+
+case "$BLOCK_BUTTON" in
+    1) toggle_lock
+esac
+
+if [ -f "${HOME}/.nolock" ]; then
+    echo $NOLOCK_SYMBOL
+    exit 33
+else
+    echo $LOCK_SYMBOL
+fi
+  
